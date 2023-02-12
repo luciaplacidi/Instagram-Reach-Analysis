@@ -89,7 +89,7 @@ save_imp_scatter <- plot(data$Impressions, data$Saves,
 abline(lm(data$Saves ~ data$Impressions), col="indianred1")
 
 
-# analyzing conversion rate
+# Analyzing Conversion Rate
 # conversion rate = how many followers from the number of profile visits from a post.
 # = (follows/profile visits) * 100
 conversion_rate <- (sum(data$Follows) / sum(data$Profile.Visits)) *100
@@ -101,6 +101,25 @@ follows_visits_scatter <- plot(data$Profile.Visits, data$Follows,
                          xlab="Profile Visits", ylab="Follows",
                          col="lightseagreen")
 abline(lm(data$Follows ~ data$Profile.Visits), col="indianred1")
+
+
+# Finding what the most important factors are for Impressions.
+# Variable importance
+
+(V = varImp(model))
+plot(V)
+
+# Plot variable importance scores
+vip::vip(model, method = "firm", ice = TRUE)            
+
+ggplot2::ggplot(V, aes(x=reorder(rownames(V),Overall), y=Overall)) +
+  geom_point( color="red", size=4, alpha=0.6)+
+  geom_segment( aes(x=rownames(V), xend=rownames(V), y=0, yend=Overall), 
+                color='darkred') +
+  xlab('Variable')+
+  ylab('Overall Importance')+
+  theme_classic() +
+  coord_flip()
 
 
 # Predict Reach
@@ -127,3 +146,4 @@ plot(testing_data$Impressions, predicted_reach,
 
 # Add reference line
 abline(0, 1, col = "indianred1")
+
